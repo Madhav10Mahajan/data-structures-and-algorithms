@@ -6,7 +6,6 @@ bool isbipartite(int start, unordered_map<int, vector<int>>&ourmap, vector<int>&
 	while (q.size() != 0) {
 
 		int front = q.front();
-		debug(front);
 		q.pop();
 		int col = color[front];
 		vector<int> temp = ourmap[front];
