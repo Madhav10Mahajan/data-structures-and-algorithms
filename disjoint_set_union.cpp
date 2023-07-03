@@ -1,4 +1,3 @@
-
 int findparent(int node, vector<int>&parent) {
 
 	if (parent[node] == node) {
