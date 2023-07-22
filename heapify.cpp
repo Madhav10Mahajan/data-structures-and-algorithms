@@ -13,7 +13,7 @@ void helper(int data, vector<int>&arr, int parentindex) {
 	if (maxindex != parentindex) {
 		swap(arr[maxindex], arr[parentindex]);
 		parentindex = maxindex;
-		helper(arr[parentindex], arr, parentindex);
+		helper(arr[parentindex], arr, parentindex); 
 	}
 
 }
