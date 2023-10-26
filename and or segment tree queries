@@ -1,0 +1,48 @@
+void buildtree(int index, int start, int end, vector<ll>&segtree, vector<int>&arr) {
+
+	if (start == end) {
+		segtree[index] = arr[start];
+		return;
+	}
+	int mid = (start + end) / 2;
+	buildtree(2 * index + 1, start, mid, segtree, arr);
+	buildtree(2 * index + 2, mid + 1, end, segtree, arr);
+	segtree[index] = (segtree[2 * index + 1]) & (segtree[2 * index + 2]);
+}
+void buildtree2(int index, int start, int end, vector<ll>&segtree2, vector<int>&arr) {
+
+	if (start == end) {
+		segtree2[index] = arr[start];
+		return;
+	}
+	int mid = (start + end) / 2;
+	buildtree2(2 * index + 1, start, mid, segtree2, arr);
+	buildtree2(2 * index + 2, mid + 1, end, segtree2, arr);
+	segtree2[index] = (segtree2[2 * index + 1]) | (segtree2[2 * index + 2]);
+}
+ll query1(int start, int end, int l, int r, int index, vector<ll>&segtree1) {
+
+	if (start >= l && end <= r) {
+		return segtree1[index];
+	}
+	if (l > end || r < start) {
+		return 2147483647;
+	}
+	ll mid = (start + end) / 2;
+	ll  left = query1(start, mid, l, r, 2 * index + 1, segtree1);
+	ll  right = query1(mid + 1, end, l, r, 2 * index + 2, segtree1);
+	return left & right;
+}
+ll query2(int start, int end, int l, int r, int index, vector<ll>&segtree2) {
+
+	if (start >= l && end <= r) {
+		return segtree2[index];
+	}
+	if (l > end || r < start) {
+		return 0;
+	}
+	ll mid = (start + end) / 2;
+	ll left = query2(start, mid, l, r, 2 * index + 1, segtree2);
+	ll right = query2(mid + 1, end, l, r, 2 * index + 2, segtree2);
+	return left | right;
+}
