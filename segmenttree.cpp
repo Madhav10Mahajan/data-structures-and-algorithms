@@ -1,59 +1,47 @@
-void builsegtree(int index, int start, int end, vector<int>&arr, vector<int>&segmentree) {
+void buildtree(int index, int start, int end, vector<ll>&a, vector<ll>&segtree) {
 
 	if (start == end) {
-		segmenttree[start] = arr[start];
+		segtree[index] = a[start];
 		return;
 	}
 	int mid = (start + end) / 2;
-	buildsegtree(2 * index + 1, start, mid, arr, segmenttree);
-	buildsegtree(2 * index + 2, mid + 1, end, arr, segmenttree);
-	segmenttree[index] = min(segmenttree[2 * index + 1], segmenttree[2 * index + 2]);
+	buildtree(2 * index + 1, start, mid, a, segtree);
+	buildtree(2 * index + 2, mid + 1, end, a, segtree);
+	segtree[index] = max(segtree[2 * index + 1], segtree[2 * index + 2]);
 }
-int query(int index, int start, int end, int l, int r, vector<int>&segmentree) {
+ll query(int index, int start, int end, int l, int r, vector<ll>&segtree) {
 
-
-	if (l <= start && end <= r) {
-		return segmentree[index];
+	if (start >= l && end <= r) {
+		return segtree[index];
+	}
+	if (start > r || end < l) {
+		return -1e9;
 	}
 	int mid = (start + end) / 2;
-	if (l >= start && r <= end) {
+	ll leftans = query(2 * index + 1, start, mid, l, r, segtree);
+	ll rightans = query(2 * index + 2, mid + 1, end, l, r, segtree);
+	return max(leftans, rightans);
 
-		int left = query(2 * index + 1, start, mid, l, r, segmentree);
-		int right = query(2 * index + 2, mid + 1, end, l, r, segmentree);
-		return min(left, right);
-	}
-	return 1e9;
 }
-void update(int index, int start, int end, int node, int val) {
 
-	if (start == end) {
-		segmenttree[node] = segmentree[node] + val;
-		return;
-	}
-	int mid = (start + end) / 2;
-	if (node >= mid && node <= end) {
-		update(2 * index + 2, mid + 1, end, node, val);
-	}
-	else {
-		update(2 * index + 1, start, mid, node, val);
-	}
-	segmenttree[index] = min(segmenttree[2 * index + 1], segmenttree[2 * index + 2]);
-}
 void solve() {
 
 	int n;
 	cin >> n;
-	vector<int> arr(n);
+	vector<ll> a(n);
 	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
+		cin >> a[i];
 	}
+	vector<ll> segtree(4 * n);
+	buildtree(0, 0, n - 1, a, segtree);
+	debug(a);
 	int q;
 	cin >> q;
-	vector<int> segmenttree(4 * n);
-	buildsegtree(0, 0, n - 1, arr, segmenttree);
-	for (int i = 0; i < q; i++) {
+	while (q--) {
 		int l, r;
 		cin >> l >> r;
-		cout << query(0, 0, n - 1, l, r, segmenttree) << endl;
+		l--;
+		r--;
+		cout << query(0, 0, n - 1, l, r, segtree) << endl;;
 	}
 }
